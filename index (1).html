@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>13-Point Screening Results — Vincent Lucas</title>
+<style>
+  :root {
+    --primary: #1a6fb0;
+    --primary-light: #e8f1f9;
+    --green: #1e8e3e;
+    --green-bg: #e7f6ea;
+    --gray-bg: #f5f7f8;
+    --text-dark: #1a1a1a;
+    --text-mid: #5a6168;
+    --text-light: #8b9096;
+    --border: #e0e4e8;
+    --card-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    --device-frame-radius: 0px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--gray-bg);
+    color: var(--text-dark);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page-wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    background: #fff;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ===== Header ===== */
+  .top-bar {
+    background: var(--primary);
+    color: #fff;
+    padding: 18px 18px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+  }
+  .top-bar svg { flex-shrink: 0; }
+
+  .top-bar-text h1 {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .top-bar-text p {
+    font-size: 12px;
+    opacity: 0.85;
+    margin-top: 2px;
+  }
+
+  .print-btn {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 13px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .print-btn:hover { background: rgba(255,255,255,0.28); }
+
+  /* ===== Summary Banner ===== */
+  .summary-banner {
+    background: var(--green-bg);
+    border-bottom: 1px solid #c8e8d0;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .summary-banner .badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .summary-banner .badge svg { color: #fff; }
+  .summary-banner h2 {
+    font-size: 15px;
+    color: var(--green);
+    font-weight: 700;
+  }
+  .summary-banner p {
+    font-size: 13px;
+    color: #3d6b47;
+    margin-top: 2px;
+  }
+
+  /* ===== Sections ===== */
+  .section {
+    padding: 20px 18px;
+    border-bottom: 8px solid var(--gray-bg);
+  }
+  .section:last-child { border-bottom: none; }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--primary);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .section-title svg { flex-shrink: 0; }
+
+  /* Order Summary grid */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 12px;
+  }
+  .info-item .label {
+    font-size: 11px;
+    color: var(--text-light);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .info-item .value {
+    font-size: 14px;
+    color: var(--text-dark);
+    font-weight: 500;
+    margin-top: 2px;
+    word-break: break-word;
+  }
+  .info-item.full { grid-column: 1 / -1; }
+
+  /* Person card */
+  .person-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), #3a8dc8);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .person-info h3 {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .person-info p {
+    font-size: 13px;
+    color: var(--text-mid);
+    margin-top: 3px;
+  }
+
+  /* License badge */
+  .license-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--green-bg);
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-top: 4px;
+  }
+  .license-badge::before {
+    content: "✓";
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  /* Payment row */
+  .pay-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    font-size: 14px;
+  }
+  .pay-row .lbl { color: var(--text-mid); }
+  .pay-row .val { font-weight: 600; }
+  .paid-tag {
+    color: var(--green);
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  /* Lab Processing */
+  .lab-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .lab-name span {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-light);
+  }
+
+  /* ===== Results Table ===== */
+  .results-container { padding: 0; }
+
+  .results-header {
+    padding: 18px 18px 12px;
+  }
+  .results-header h2 {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .results-header p {
+    font-size: 13px;
+    color: var(--text-mid);
+    margin-top: 4px;
+  }
+
+  .result-item {
+    display: flex;
+    align-items: stretch;
+    padding: 14px 18px;
+    border-top: 1px solid var(--border);
+  }
+  .result-item:nth-child(even) {
+    background: #fbfcfd;
+  }
+
+  .result-status-dot {
+    width: 4px;
+    border-radius: 2px;
+    background: var(--green);
+    flex-shrink: 0;
+    margin-right: 14px;
+  }
+
+  .result-content {
+    flex: 1;
+    min-width: 0;
+  }
+  .result-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+  }
+  .result-detail {
+    font-size: 12px;
+    color: var(--text-mid);
+    margin-top: 3px;
+  }
+  .result-lab-id {
+    font-size: 11px;
+    color: var(--text-light);
+    margin-top: 4px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    letter-spacing: 0.3px;
+  }
+
+  .result-badge {
+    flex-shrink: 0;
+    align-self: center;
+    background: var(--green-bg);
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 5px 11px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  /* ===== Footer ===== */
+  .footer {
+    padding: 28px 18px 34px;
+    text-align: center;
+    background: var(--gray-bg);
+  }
+  .footer p {
+    font-size: 12px;
+    color: var(--text-light);
+    line-height: 1.7;
+  }
+  .footer .footer-disclaimer {
+    font-size: 11px;
+    color: var(--text-light);
+    margin-top: 10px;
+    padding: 0 14px;
+    line-height: 1.65;
+  }
+  .footer .sample-note {
+    display: inline-block;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+
+  /* Print styles */
+  @media print {
+    body { background: #fff; }
+    .page-wrap { max-width: 100%; box-shadow: none; }
+    .print-btn { display: none; }
+  }
+
+  /* Larger screens — center & shadow */
+  @media (min-width: 481px) {
+    body { padding: 20px 0; }
+    .page-wrap {
+      border-radius: 16px;
+      box-shadow: var(--card-shadow);
+      min-height: auto;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- ===== Top Bar ===== -->
+  <div class="top-bar">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+      <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-3 11h-2v2c0 1.1-.9 2-2 2s-2-.9-2-2v-2H8c-1.1 0-2-.9-2-2s.9-2 2-2h2V8c0-1.1.9-2 2-2s2 .9 2 2v2h2c1.1 0 2 .9 2 2s-.9 2-2 2z" fill="white" opacity="0.9"/>
+    </svg>
+    <div class="top-bar-text">
+      <h1>Screening Results</h1>
+      <p>13-Point Panel · Lab ID #NL-23520</p>
+    </div>
+    <button class="print-btn" onclick="window.print()">Print</button>
+  </div>
+
+  <!-- ===== Summary Banner ===== -->
+  <div class="summary-banner">
+    <div class="badge">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="white"/>
+      </svg>
+    </div>
+    <div>
+      <h2>All Results Negative</h2>
+      <p>No sexually transmitted infections detected in this panel.</p>
+    </div>
+  </div>
+
+  <!-- ===== Order Summary ===== -->
+  <div class="section">
+    <div class="section-title">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 5h18v2H3zm0 6h18v2H3zm0 6h18v2H3z" fill="var(--primary)"/></svg>
+      Order Summary
+    </div>
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="label">Update Posted</div>
+        <div class="value">10/26/2026</div>
+      </div>
+      <div class="info-item">
+        <div class="label">PSC Visited</div>
+        <div class="value">10/27/2026</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Result Available</div>
+        <div class="value">11/02/2026</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Panel</div>
+        <div class="value">13-Point Screening</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Person Being Tested ===== -->
+  <div class="section">
+    <div class="section-title">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="var(--primary)"/></svg>
+      Person Being Tested
+    </div>
+    <div class="person-card">
+      <div class="avatar">VL</div>
+      <div class="person-info">
+        <h3>Vincent Lucas</h3>
+        <p>Male · Age 28 · DOB 09/29/1998</p>
+        <div class="license-badge">VALID</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Payment Details ===== -->
+  <div class="section">
+    <div class="section-title">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" fill="var(--primary)"/></svg>
+      Payment Details
+    </div>
+    <div class="pay-row">
+      <span class="lbl">Payment Method</span>
+      <span class="val">Credit Card</span>
+    </div>
+    <div class="pay-row">
+      <span class="lbl">Payment Status</span>
+      <span class="paid-tag">✓ Paid In Full</span>
+    </div>
+  </div>
+
+  <!-- ===== Laboratory Processing Details ===== -->
+  <div class="section">
+    <div class="section-title">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 2h6v2h4c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h4V2zm0 4H5v12h14V6h-4v2H9V6zm5 6h2v2h-2v2h-2v-2h-2v-2h2v-2h2v2z" fill="var(--primary)"/></svg>
+      Laboratory Processing Details
+    </div>
+    <div class="lab-name">Northwind Diagnostics</div>
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="label">Collected</div>
+        <div class="value">10/27/2026</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Received</div>
+        <div class="value">10/27/2026</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Reported</div>
+        <div class="value">11/02/2026</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Processing Lab</div>
+        <div class="value">Northwind Diagnostics</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Results ===== -->
+  <div class="results-container">
+    <div class="results-header">
+      <h2>Test Results</h2>
+      <p>13 tests performed · All results reported below</p>
+    </div>
+
+    <!-- Result 1 -->
+    <div class="result-item">
+      <div class="result-status-dot"></div>
+      <div class="result-content">
+        <div class="result-name">HIV-1 RNA Early Detection</div>
+        <div class="result-detail">Not detected</div>
+        <div class="result-lab-id">Lab ID: #NL-23520</div>
+      </div>
+      <div class="result-badge">Negative</div>
+    </div>
+
+    <!-- Result 2 -->
+    <div class="result-item">
+      <div class="result-status-dot"></div>
+      <div class="result-content">
+        <div class="result-name">HIV-1/2 Antibody &amp; p24 Antigen</div>
+        <div class="result-detail">Non-reactive</div>
+        <div class="result-lab-id">Lab ID: #NL-23520</div>
+      </div>
+      <div class="result-badge">Negative</div>
+    </div>
+
+    <!-- Result 3 -->
+    <div class="result-item">
+      <div class="result-status-dot"></div>
+      <div class="result-content">
+        <div class="result-name">Herpes Simplex 1 (IgG)</div>
+        <div class="result-detail">&lt;0.90</div>
+        <div class="result-lab-id">Lab ID: #NL-23520</div>
+      </div>
+      <div class="result-badge">Negative</div>
+    </div>
+
+    <!-- Result 4 -->
+    <div class="result-item">
+      <div class="result-status-dot"></div>
+      <div class="result-content">
+        <div class="result-name">Herpes Simplex 2 (IgG)</div>
+        <div class="result-detail">&lt;0.90</div>
+        <div class="result-lab-id">Lab ID: #NL-23520</div>
+      </div>
+      <div class="result-badge">Negative</div>
+    </div>
+
+    <!-- Result 5 -->
+    <div class="result-item">
+      <div class="result-status-dot"></div>
+      <div class="result-content">
+        <div class="result-name">Chlamydia (NAAT)</div>
+        <div class="result-detail">Not detected</div>
+        <div class="result-lab-id">Lab ID: #NL-23520</div>
+      </div>
+      <div class="result-badge">Negative</div>
+    </div>
+
+    <!-- Result 6 -->
+    <div class="result-item">
+      <div class="result-status-dot"></div>
+      <div class="result-content">
+        <div class="result-name">Gonorrhea (NAAT)</div>
+        <div class="result-detail">Not detected</div>
+        <div class="result-lab-id">Lab ID: #NL-23520</div>
+      </div>
+      <div class="result-badge">Negative</div>
+    </div>
+
+    <!-- Result 7 -->
+    <div class="result-item">
+      <div class="result-status-dot"></div>
+      <div class="result-content">
+        <div class="result-name">Syphilis (RPR)</div>
+        <div class="result-detail">Non-reactive</div>
+        <div class="result-lab-id">Lab ID: #NL-23520</div>
+      </div>
+      <div class="result-badge">Negative</div>
+    </div>
+
+    <!-- Result 8 -->
+    <div class="result-item">
+      <div class="result-status-dot"></div>
+      <div class="result-content">
+        <div class="result-name">Hepatitis A (IgM)</div>
+        <div class="result-detail">Non-reactive</div>
+        <div class="result-lab-id">Lab ID: #NL-23520</div>
+      </div>
+      <div class="result-badge">Negative</div>
+    </div>
+
+    <!-- Result 9 -->
+    <div class="result-item">
+      <div class="result-status-dot"></div>
+      <div class="result-content">
+        <div class="result-name">Hepatitis B Surface Antigen</div>
+        <div class="result-detail">Non-reactive</div>
+        <div class="result-lab-id">Lab ID: #NL-23520</div>
+      </div>
+      <div class="result-badge">Negative</div>
+    </div>
+
+    <!-- Result 10 -->
+    <div class="result-item">
+      <div class="result-status-dot"></div>
+      <div class="result-content">
+        <div class="result-name">Hepatitis C Antibody</div>
+        <div class="result-detail">Non-reactive</div>
+        <div class="result-lab-id">Lab ID: #NL-23520</div>
+      </div>
+      <div class="result-badge">Negative</div>
+    </div>
+
+    <!-- Result 11 -->
+    <div class="result-item">
+      <div class="result-status-dot"></div>
+      <div class="result-content">
+        <div class="result-name">Trichomoniasis (NAAT)</div>
+        <div class="result-detail">Not detected</div>
+        <div class="result-lab-id">Lab ID: #NL-23520</div>
+      </div>
+      <div class="result-badge">Negative</div>
+    </div>
+
+    <!-- Result 12 -->
+    <div class="result-item">
+      <div class="result-status-dot"></div>
+      <div class="result-content">
+        <div class="result-name">Mycoplasma Genitalium</div>
+        <div class="result-detail">Not detected</div>
+        <div class="result-lab-id">Lab ID: #NL-23520</div>
+      </div>
+      <div class="result-badge">Negative</div>
+    </div>
+
+    <!-- Result 13 -->
+    <div class="result-item">
+      <div class="result-status-dot"></div>
+      <div class="result-content">
+        <div class="result-name">Ureaplasma</div>
+        <div class="result-detail">Not detected</div>
+        <div class="result-lab-id">Lab ID: #NL-23520</div>
+      </div>
+      <div class="result-badge">Negative</div>
+    </div>
+  </div>
+
+  <!-- ===== Footer ===== -->
+  <div class="footer">
+    <div class="sample-note">Sample for Vincent Lucas</div>
+    <p>Northwind Diagnostics · CLIA ID: 00D0000000<br>Results reported on 11/02/2026</p>
+    <p class="footer-disclaimer">This is a fictional mock screening report created for a health class / web design project. All names, lab IDs, dates, and results are simulated. This document does not constitute real medical advice or laboratory results.</p>
+  </div>
+
+</div>
+</body>
+</html>
+<script data-huggingchat-badge="script">
+(function () {
+	try {
+		if (document.querySelector("[data-huggingchat-badge]:not(script)")) return;
+		var host = document.createElement("div");
+		host.setAttribute("data-huggingchat-badge", "");
+		var styles = [["all","initial"],["position","fixed"],["right","12px"],["bottom","12px"],["z-index","2147483647"],["display","block"],["visibility","visible"],["opacity","1"],["pointer-events","auto"],["width","auto"],["height","auto"],["margin","0"],["padding","0"],["max-width","none"],["max-height","none"],["transform","none"],["filter","none"],["clip-path","none"],["color-scheme","light"]];
+		for (var i = 0; i < styles.length; i++) {
+			host.style.setProperty(styles[i][0], styles[i][1], "important");
+		}
+		host.attachShadow({ mode: "closed" }).innerHTML = "<style>\n:host { all: initial; }\na {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  box-sizing: border-box;\n  height: 26px;\n  padding: 0 9px 0 7px;\n  border-radius: 999px;\n  border: 1px solid rgba(0, 0, 0, 0.07);\n  background: rgba(255, 255, 255, 0.92);\n  -webkit-backdrop-filter: saturate(180%) blur(8px);\n  backdrop-filter: saturate(180%) blur(8px);\n  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 6px 16px rgba(0, 0, 0, 0.06);\n  color: #111827;\n  font: 500 11px/1 ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", sans-serif;\n  text-decoration: none;\n  white-space: nowrap;\n  opacity: 0.72;\n  transition: opacity 0.15s ease, transform 0.15s ease;\n}\na:hover, a:focus-visible { opacity: 1; transform: translateY(-1px); }\nsvg { width: 14px; height: 14px; flex: none; }\n@media print { a { display: none; } }\n<\/style><a href=\"https://huggingface.co/chat\" target=\"_blank\" rel=\"noopener noreferrer nofollow\"><svg viewBox=\"0 0 32 32\" fill=\"none\" aria-hidden=\"true\"><path d=\"M16.0006 25.9992C13.8266 25.999 11.7118 25.2901 9.97686 23.9799C8.2419 22.6698 6.98127 20.8298 6.38599 18.7388C5.79071 16.6478 5.89323 14.4198 6.678 12.3923C7.46278 10.3648 8.88705 8.64837 10.735 7.50308C12.5829 6.35779 14.7538 5.84606 16.9187 6.04544C19.0837 6.24481 21.1246 7.14442 22.7323 8.60795C24.34 10.0715 25.4268 12.0192 25.8281 14.1559C26.2293 16.2926 25.9232 18.5019 24.9561 20.449C24.7703 20.8042 24.7223 21.2155 24.8211 21.604L25.4211 23.8316C25.4803 24.0518 25.4805 24.2837 25.4216 24.5039C25.3627 24.7242 25.2468 24.925 25.0856 25.0862C24.9244 25.2474 24.7235 25.3633 24.5033 25.4222C24.283 25.4811 24.0512 25.4809 23.831 25.4217L21.6034 24.8217C21.2172 24.7248 20.809 24.7729 20.4558 24.9567C19.0683 25.6467 17.5457 26.0068 16.0006 26.0068V25.9992Z\" fill=\"currentColor\"/><path d=\"M9.62598 16.0013C9.62598 15.3799 10.1294 14.8765 10.7508 14.8765C11.3721 14.8765 11.8756 15.3799 11.8756 16.0013C11.8756 17.0953 12.3102 18.1448 13.0838 18.9184C13.8574 19.692 14.9069 20.1266 16.001 20.1267C17.095 20.1267 18.1445 19.692 18.9181 18.9184C19.6918 18.1448 20.1264 17.0953 20.1264 16.0013C20.1264 15.3799 20.6299 14.8765 21.2512 14.8765C21.8725 14.8765 22.3759 15.3799 22.3759 16.0013C22.3759 17.6921 21.7046 19.3137 20.509 20.5093C19.3134 21.7049 17.6918 22.3762 16.001 22.3762C14.3102 22.3762 12.6885 21.7049 11.4929 20.5093C10.2974 19.3137 9.62598 17.6921 9.62598 16.0013Z\" fill=\"#fff\"/><\/svg><span>Made with HuggingChat<\/span><\/a>";
+		function attach() {
+			var parent = document.body || document.documentElement;
+			if (parent && host.parentNode !== parent) parent.appendChild(host);
+		}
+		attach();
+		// Artifacts that rewrite document.body wholesale would drop the badge.
+		if (document.body && typeof MutationObserver === "function") {
+			new MutationObserver(attach).observe(document.body, { childList: true });
+		} else {
+			document.addEventListener("DOMContentLoaded", attach);
+		}
+	} catch (e) {}
+})();
+</script>
